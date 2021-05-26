@@ -4,10 +4,10 @@
       <h1 class="text-center mt-5">Vue Todo App</h1>
       <div class="w-50 mx-auto">
         <!-- Input,s -->
-        <input type="text" placeholder="Enter a task" class="form-control mb-4">
-        <input type="text" placeholder="Description" class="input-lg form-control mb-4">
+        <input v-model="task" type="text" placeholder="Enter a task" class="form-control mb-4">
+        <input v-model="description" type="text" placeholder="Description" class="input-lg form-control mb-4">
         <div class="text-center">
-          <button class="btn btn-primary btn-lg">Submit</button>
+          <button @click="submitTask()" class="btn btn-primary btn-lg">Submit</button>
         </div>
       </div>
     </div>
@@ -24,17 +24,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Steal bnana,s from store</td>
-            <td>To-do</td>
+          <tr v-for="(task, index) in tasks" :key="index">
+            <td>{{task.name}}</td>
+            <td>{{task.description}}</td>
             <td>
-              <div class="text-center">
-                <span class="fa fa-pen"></span>
+              <div class="text-center" @click="editTask(index)">
+                <span class="fa fa-pen pointer"></span>
               </div>
             </td>
             <td>
-              <div class="text-center">
-                <span class="fa fa-trash"></span>
+              <div class="text-center" @click="deleteTask(index)">
+                <span class="fa fa-trash pointer"></span>
               </div>
             </td>
           </tr>
@@ -53,6 +53,10 @@ export default {
 
   data() {
     return {
+      task: '',
+      description: '',
+      editedTask: null,
+
       tasks: [
         {
           name: 'Banana,s',
@@ -64,6 +68,40 @@ export default {
         }
       ]
     }
+  },
+
+  methods: {
+
+    submitTask() {
+      if (this.task.length === 0) return;
+
+      if (this.editedTask === null){ 
+        this.tasks.push({
+        name: this.task,
+        description: this.description,
+      })
+
+      this.task = '',
+      this.description = ''
+
+      } else {
+        this.tasks[this.editedTask].name = this.task;
+        this.tasks[this.editedTask].description = this.description
+        this.editedTask = null;
+        this.editedDescription = null;
+      }
+    },
+
+    deleteTask(index) {
+      this.tasks.splice(index, 1);
+    },
+
+    editTask (index) {
+      this.task = this.tasks[index].name;
+      this.description = this.tasks[index].description;
+      this.editedTask = index;
+      this.editedDescription = index;
+    }
   }
 }
 </script>
@@ -74,5 +112,8 @@ export default {
     border-radius: 6px;
     background-color: #FFFFFF;
     box-shadow: 0 0 14px 0 rgb(0 0 0 / 7%);
+  }
+  .pointer {
+    cursor: pointer;
   }
 </style>
