@@ -73,16 +73,16 @@ export default {
   methods: {
 
     submitTask() {
-      if (this.task.length === 0) return;
+      if (this.task.length === 0) {
+        alert('Please add a task');
+        return
+      };
 
       if (this.editedTask === null){ 
         this.tasks.push({
         name: this.task,
         description: this.description,
-      })
-
-      this.task = '',
-      this.description = ''
+        })
 
       } else {
         this.tasks[this.editedTask].name = this.task;
@@ -90,6 +90,9 @@ export default {
         this.editedTask = null;
         this.editedDescription = null;
       }
+
+      this.task = '',
+      this.description = ''
     },
 
     deleteTask(index) {
